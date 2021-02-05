@@ -1,6 +1,6 @@
 # Video Cutter (vcut)
  
-*Video Cutter* is currently a command-line program that assists in cutting video files into manageable segments. A GUI version is in the works, but it is still a ways off.
+*Video Cutter* is currently a command-line program that assists in cutting video files into manageable segments. A GUI version is in the works, but it may be quite some time before it is ready.
 
 ## Raison D'être
 
@@ -11,16 +11,16 @@ Non-linear video editors (NLEs) are great for making precision cuts, adding tran
 There are a few caveats to this program in its current state. They are:
 
 1. You need to do some setup on your own.
-    - *Video Cutter* relies on *FFMPEG* to do the heavy lifting. It will have to be installed and in the search path somewhere.
-    - Python interpreter is required. It would also be helpful if Python is also in the search path.
-2. The cuts are not made precisely where you ask for them.
-    - One of the consequences of not engaging any encoders is that ffmpeg will only cut a video at the nearest keyframe before the point where you ask it to cut.
-    - Precise cuts will be an option in future versions, but they will require engaging the encoder (this will also add flexibility in choosing/changing the file output)
+    - *Video Cutter* relies on *ffmpeg* to do the heavy lifting. It will have to be installed and in the search path somewhere.
+    - The Python (3) interpreter is required. It would also be helpful if Python is also in the search path.
+2. The cuts are not made precisely where you specify them.
+    - One of the consequences of not engaging any encoders is that *ffmpeg* will only cut a video at the nearest I-frame before the point where you ask it to cut.
+    - Precise cuts will be an option in future versions, but they will require engaging the encoder (but this will also add flexibility in choosing/changing the file output)
 3. It may not work with all codecs and all container formats.
-   - It is only tested with h.264 streams in mp4 and mkv containers. It should work with any codec that can be stream-copied.
+   - It is only tested with h.264 streams in mp4 and mkv containers, although it should work with any codec and container that can be stream-copied.
    - Right now it uses the same container format for the output as the input, but recontainerization will be an option added soon.
    - Output options are not flexible at this time. See the manual for details.
  
 ## Who should use this program?
 
-This program is aimed at anyone who handles really long takes, such as gamers recording long playthroughs, or journalists who will end up with hours of footage to comb through for production later, or video producers who do this work professionally and want an extra tool to streamline their workflow.
+This program is aimed at anyone who handles really long takes, such as gamers recording long playthroughs, independent journalists who will end up with hours of footage to comb through for production later, or video producers who do this work professionally and want an extra tool to streamline their workflow.
