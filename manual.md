@@ -9,6 +9,7 @@
 | Cut Point | A point in the video in which you wish to make a cut. |
 | Segment | A span of video demarcated by cut points. There will always be one more segment than cut points. |
 | Keeper | A segment you wish to keep. By default all segments are kept. |
+| Job | The list of commands used to invoke *ffmpeg* to achieve the desired results |
 | I-frame (or keyframe) | An encoded image which acts as a starting point frame for the video compressor |
 
 ## Usage
@@ -21,7 +22,7 @@ Usage is as follows:
 
 `vcut <infile> cutpoints... -k keepers...`
 
-The second method will tell vcut to keep only certain segments demarcated by the cut points you provide. All cut points are specified with a standard-ISO-like time notation such as `00:12:34` or `00:12:34.567`. You must use hours, minutes, and seconds for each point. Using only two has strange behavior like specifying hours and seconds. Note that since *ffmpeg* will cut the file at the nearest keyframe, specifiying milliseconds or microseconds (six digits after the decimal) -- also technically legal -- will be lost precision.
+The second method will tell vcut to keep only certain segments demarcated by the cut points you provide. All cut points are specified with a standard-ISO-like time notation such as `00:12:34` or `00:12:34.567`. You must use hours, minutes, and seconds for each point. Using only two fields has strange and likely unwanted behavior, such as specifying hours and seconds. Note that since *ffmpeg* will cut the file at the nearest I-frame, specifiying milliseconds or microseconds (six digits after the decimal) -- also technically legal -- will be lost precision.
 
 You can also just get the job itself in the form of text output to the console with the `-j` flag.
 
@@ -37,11 +38,11 @@ This will produce three videos. The first being from the beginning of the video 
 
 `vcut 'V7GJ2230.MP4' 00:06:00 00:35:00 01:41:00 02:17:00 -k 1 3`
 
-This will cut the video into five segments and keep the segment from `00:06:00` to `00:35:00` and the second being from `01:14:00` to `02:17:00` and discard the rest. The list of *keeper* indices are 0-based, meaning that the first one is `0`. It is worth noting that the original file is not deleted so nothing is truly "discarded" per se, it's just never created in the first place.
+This will cut the video into five segments and copy two of them. The first is the segment from `00:06:00` to `00:35:00` and the second one will be from `01:14:00` to `02:17:00` and the rest will not be produced. The list of *keeper* indices is 0-based, meaning that the first one is `0`. The original file is not deleted.
 
 ### Output
 
-A folder will be created in the current working directory that has the base name of the input file with `.cuts` appended to it. Produced files, as well as the a digest of the `stderr` outputs from each invokation of *ffmpeg* will be placed in this folder. If that folder already exists, the program will refuse to run, instead instructing you to do something with the output of the previous invokation.
+A folder will be created in the current working directory that has the base name of the input file with `.cuts` concatenated to it. Produced files, as well as a digest of the `stderr` outputs from each invokation of *ffmpeg* will be placed in this folder. If that folder already exists, the program will refuse to run, instead instructing you to do something with the output of the previous invokation.
 
 ```py
 self.outfolder = path.join(getcwd(), f"{i_fbase}.cuts")
