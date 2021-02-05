@@ -178,7 +178,7 @@ if __name__ == "__main__":
         
     else:
         if path.exists(job.outfolder):
-            print("Output folder already exists. Deal with previous output and delete folder first!")
+            print("Output folder already exists. Decide what to do with these files, then delete them from this location before trying again!")
             sys.exit(1)
         mkdir(job.outfolder)
         for command in job.commands:
