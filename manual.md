@@ -19,6 +19,10 @@ Usage is as follows:
 `vcut <infile> cutpoints... -k keepers...`
 The second method will tell vcut to keep only certain segments demarcated by the cut points you provide. All cut points are specified with a standard-ISO-like time notation such as `00:12:34` or `00:12:34.567`. You must use hours, minutes, and seconds for each point. Using only two has strange behavior like specifying hours and seconds. Note that since *ffmpeg* will cut the file at the nearest keyframe, specifiying milliseconds or microseconds (six digits after the decimal) -- also technically legal -- will be lost precision.
 
+You can also just get the job itself in the form of text output to the console with the `-j` flag.
+```vcut <infile> cutpoints... -k keepers... -j```
+This will print the calls to *ffmpeg* instead of actually invoking them. You could redirect this to a file, edit the calls if you wanted to tweak some arguments, give it the she-bang as necessary for your platform, and then run it as a script. It's also a good way to see what this program *really* does.
+
 ### Examples
 
 `vcut 'kittens.mkv' 00:09:30 00:14:50`
