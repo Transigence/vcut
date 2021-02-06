@@ -134,14 +134,17 @@ class Job():
     
     
 HELP_EPILOG = """
-Example: %(prog)s <infile> cp 00:05:00 00:10:00
+Example: %(prog)s <infile> 00:05:00 00:10:00
 Result: Breaks the file into three pieces at the two cut points and keeps all three
 
-Example: %(prog)s <infile> cp 00:00:48 00:19:29 00:20:42 00:41:11 k 1 3
+Example: %(prog)s <infile> 00:00:48 00:19:29 00:20:42 00:41:11 -k 1 3
 Result: Breaks the file into 5 pieces, keeps the segments from 00:00:48 -> 00:19:29 and 00:20:42 -> 00:41:11, and discards the rest
 
-NOTICE: You must use full leading fields for times or you will get unwanted results!
-Examples: 00:00:00, 00:00:00.000, or 00:00:00.000000 -- nothing else.
+Example: %(prog)s <infile> 00:05:00 00:10:00 00:15:00 -j
+Result: Creates the commands to break the file into 4 pieces and prints them to the console.
+
+NOTICE: You must use all three fields for times or you will get unwanted results!
+Example: 00:00:00
 
 NOTICE: ffmpeg cuts at the nearest I-frame before the specified time, so cut points can be off by several seconds. It is not likely that specifying milliseconds or microseconds will be useful in this version of VCut.
 """
