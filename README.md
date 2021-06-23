@@ -24,4 +24,4 @@ There are a few caveats to this program in its current state. They are:
  
 ## Who should use this program?
 
-This program is for anyone who handles really long video files. Independent journalists, video producers, and gamers recording long playthroughs will benefit from using this program the most. It's quite possible that security personnel handling day-long and week-long surveillance video files may also find some use for it.
+This program is for anyone who handles long video files. Independent journalists, video producers, and gamers recording long playthroughs will benefit from using this program the most. It's quite possible that security personnel handling day-long and week-long surveillance video files may also find some use for it.
