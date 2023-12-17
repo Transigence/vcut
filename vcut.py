@@ -1,3 +1,4 @@
+#! /usr/bin/python
 #Copyright (C) 2021 Paul Johnson
 #Contact: paul.m.w.johnson@protonmail.com
 
@@ -22,6 +23,9 @@ which can exceed 24, but timedeltas are kept internally as days, seconds, and mi
 #pathinfo = i_dname, i_fname, i_fbase, i_fext, i_fqp
 
 class Job():
+    """ Generates and contains a list of job parameters to be used to create a list of calls to ffmpeg.
+Job(infile, [cutpoint, cutpoint...], [keeper, keeper...])"""
+
     def getpathinfo(s):
         fullpath = path.abspath(s)
         d, f = path.split(fullpath)
@@ -34,7 +38,7 @@ class Job():
         return f"{h}:{m}:{sec}"
 
     def get_segments(cutpoints): #Convert cut times into interval spans between them
-        segs = []
+        segs: list = []
         p = cutpoints[0]
         for cp in cutpoints[1:-1]:
             seg = p, cp
@@ -88,22 +92,24 @@ class Job():
         spanstring = f"{spanstart}_{spanend}".replace(":", "-")
         o_fqp = (path.join(outfolder, f"{i_fbase}.{spanstring}{i_fext}"))
         
-        return f"ffmpeg -ss {Job.hmsfromtimedelta(seg[0])} -to {Job.hmsfromtimedelta(seg[1])} -i \"{i_fqp}\" -c:v copy -c:a copy \"{o_fqp}\""
+#        return f"ffmpeg -ss {Job.hmsfromtimedelta(seg[0])} -to {Job.hmsfromtimedelta(seg[1])} -i \"{i_fqp}\" -c:v copy -c:a copy \"{o_fqp}\""
+        return ["ffmpeg", "-ss", Job.hmsfromtimedelta(seg[0]), "-to", Job.hmsfromtimedelta(seg[1]), "-i", i_fqp, "-c:v", "copy", "-c:a",  "copy", o_fqp]
     
     def __iter__(self):
         yield from self.commands
 
     def __init__(self, infile, cutpoints, keepers=None):
         self.cutpoints = cutpoints        
-        self.commands = list()
-        self.log = str()
+        self.commands = []
+        self.log = ""
         pathinfo = Job.getpathinfo(args.i)
         i_fbase, i_fqp = pathinfo[1], pathinfo[4]
         self.outfolder = path.join(getcwd(), f"{i_fbase}.cuts") #getcwd might need to be changed for GUI version, and hoisted to __main__
         self.error = str()
         
-        result = subprocess.run("ffprobe -i \"%s\"" % i_fqp, capture_output=True)
-        endtime = Job.timedeltafromhms(Job.iso_sanitize(str(result.stderr).split("Duration: ")[1].split(",")[0])) #Extract the duration of the input file from ffprobe output.
+        result = subprocess.run(["ffprobe", "-i", "%s" % i_fqp], capture_output=True)
+        print(result.stderr.decode('utf-8'))
+        endtime = Job.timedeltafromhms(Job.iso_sanitize(str(result.stderr.decode('utf-8')).split("Duration: ")[1].split(",")[0])) #Extract the duration of the input file from ffprobe output.
 
         ends = Job.create_endslist(cutpoints, endtime) #Create cutpoint ends as timedelta objects
         
@@ -146,7 +152,7 @@ Result: Creates the commands to break the file into 4 pieces and prints them to 
 NOTICE: You must use all three fields for times or you will get unwanted results!
 Example: 00:00:00
 
-NOTICE: ffmpeg cuts at the nearest I-frame before the specified time, so cut points can be off by several seconds. It is not likely that specifying milliseconds or microseconds will be useful in this version of VCut.
+NOTICE: ffmpeg cuts at the nearest I-frame before the specified time, so cut points can be off by as much as several seconds. It is not likely that specifying milliseconds or microseconds will be useful in this version of VCut.
 """
 
 if __name__ == "__main__":
@@ -179,7 +185,7 @@ if __name__ == "__main__":
             print(command)
         sys.exit(0)    
         
-    else:
+    else: #There is a difference, here, between what is said by the program to the user and what is actually done. This should be resolved at some point.
         if path.exists(job.outfolder):
             print("Output folder already exists. Decide what to do with these files, then delete them from this location before trying again!")
             sys.exit(1)
